@@ -1,0 +1,96 @@
+Q1: Two sum : return the indexes of the 2 elements in the array such that their value add upto to the target value. values cannot be repeated.
+
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        dict ={}
+        i = 0
+        for val in nums:
+            if(target - val) in dict :
+                return [dict[target - val], i]
+
+            else : 
+                dict [val] = i
+                i+=1
+        return [0,0]
+
+
+
+Q2: Stack: valid parenthesis (),{},[] if not matching then return false.
+
+class Solution {
+    public boolean isValid(String s) {
+        Stack<Character> stack = new Stack<>();
+        for (char ch : s.toCharArray()) {
+            if (ch == '(' || ch == '{' || ch == '[') {
+                stack.push(ch);
+            } else if (ch == ')' && !stack.isEmpty() && stack.peek() == '(') {
+                stack.pop();
+            } else if (ch == '}' && !stack.isEmpty() && stack.peek() == '{') {
+                stack.pop();
+            } else if (ch == ']' && !stack.isEmpty() && stack.peek() == '[') {
+                stack.pop();
+            } else {
+                return false; // Mismatched closing bracket or empty stack
+            }
+        }
+        return stack.isEmpty(); // Check if all brackets are properly closed
+    }
+}
+
+class Solution:
+    def isValid(self, s: str) -> bool:
+        stack = []
+        rev_pair = {')':'(', '}':'{', ']':'['}
+        for c in s:
+            if c in rev_pair:
+                if stack and stack[-1] == rev_pair[c]:
+                    stack.pop()
+                else:
+                    return False
+            else:
+                stack.append(c)
+        return not stack  
+
+
+
+Q3.  Valid Palindrome
+A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.
+Given a string s, return true if it is a palindrome, or false otherwise.
+
+class Solution {
+    public boolean isPalindrome(String s) {
+        String a =  s.toLowerCase().replaceAll("[^a-z0-9]", "");
+        String sa = ""
+        boolean ans = false;
+        for(int i=a.length()-1;i>=0;i--)
+        {
+            sa  = sa+ a.charAt(i);
+        }
+        if(a.equals(sa)){
+            ans = true;
+        }
+        return ans;
+    }
+}
+
+class Solution:
+    def isPalindrome(self, s: str) -> bool:
+        s_low = s.lower()
+        new_s = "".join(filter(str.isalnum, s_low))
+        return new_s == new_s[::-1]
+   
+
+Q4. 217. Contains Duplicate
+Given an integer array nums, return true if any value appears at least twice in the array, and return false if every element is distinct.
+class Solution {
+    public boolean containsDuplicate(int[] nums) {
+        Arrays.sort(nums); 
+        for (int i = 0; i < nums.length - 1; i++) {
+                if (nums[i] == nums[i+1]) {
+                    return true;
+                }
+        }
+        return false;
+    }
+}
+
