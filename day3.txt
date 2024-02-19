@@ -242,3 +242,158 @@ class Solution:
                 return False
             stack.pop()  # Corrected this line
         return not stack  # Corrected this line
+
+
+16. Reverse a linked list 
+Answer:
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        prev = None
+        curr = head 
+
+        while curr:
+            temp = curr.next
+            curr.next = prev
+            prev = curr
+            curr = temp
+        return prev
+
+
+17. Merge two sorted linked list 
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
+
+        d = ListNode()
+        c = d
+
+        while list1 and list2:
+            if list1.val<list2.val:
+                c.next = list1
+                list1 = list1.next
+            else:
+                c.next = list2 
+                list2 = list2.next
+
+            c = c.next  
+
+        if list1:
+            c.next = list1
+        elif list2:
+            c.next = list2
+
+        return d.next  
+
+
+
+18.linked list cycle
+Answer:
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def hasCycle(self, head: Optional[ListNode]) -> bool:
+        slow , fast = head, head
+
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+            if slow == fast:
+                return True
+        return False
+
+
+19. Remove the nth node from the end of the list 
+Answer:
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
+        dummy = ListNode(0, head)
+        left = dummy 
+        right = head 
+
+        while n>0:
+            right = right.next
+            n-=1
+        
+        while right:
+            left = left.next
+            right = right.next
+        
+        left.next = left.next.next
+        return dummy.next
+
+
+
+20: Number of 1 bits 
+Answer:
+class Solution:
+    def hammingWeight(self, n: int) -> int:
+        res = 0
+        while n:
+            n &= n - 1
+            res += 1
+        return res
+
+
+21: Counting bits 
+Answer:
+class Solution:
+    def countBits(self, n: int) -> List[int]:
+        dp = [0]*(n+1)
+        offset =1
+
+        for i in range(1, n+1):
+            if offset *2 == i:
+                offset =i
+            dp[i] = 1+ dp[i-offset]
+        return dp 
+
+
+22.  reverse bits 
+Answer;
+class Solution:
+    def reverseBits(self, n: int) -> int:
+        res = 0
+        for i in range(32):
+            bit = (n>>i) & 1
+            res += (bit<<(31-i))
+        return res
+
+
+23. missing number
+Answer:
+class Solution:
+    def missingNumber(self, nums: List[int]) -> int:
+        res = len(nums)
+        for i in range(len(nums)):
+            res += i-nums[i]
+        return res
+
+
+24. sum of integerw without +/-
+Answer:
+class Solution:
+    def getSum(self, a: int, b: int) -> int:
+        mask = 0xFFFFFFFF  # Mask to get 32-bit representation
+        while b != 0:
+            a, b = (a ^ b) & mask, ((a & b) << 1) & mask
+        return a if a <= 0x7FFFFFFF else ~(a ^ mask)
+
+
