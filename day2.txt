@@ -1,0 +1,64 @@
+Q1: Best time to sell and buy stock :
+
+class Solution {
+    public int maxProfit(int[] prices) {
+        int p = 0;
+        int start = prices[i];
+        for (int i=0;i<prices.length;i++)
+        {
+            if( prices[i]-start > p)
+                p = prices[i]- start;
+            else if(start>prices[i])
+                start= prices[i];
+        }
+        return p;
+    }
+}
+
+
+Q2. create a single linked list in sorted format from 2 sorted linked list 
+ class Solution{
+    public ListNode linkedlist(ListNode list1, ListNode list2)
+    {
+        ListNode ans = new ListNode ();
+        ListNode ptr = ans;
+
+        while(list1!=null && list2!=null)
+        {
+            if(list1.val<=list2.val)
+            {
+                ans.next = new ListNode(list1.val);
+                list1=list1.next;
+            }
+            else{
+                ans.next = new ListNode(list2.val);
+                list2=list2.next;
+            }
+            ans = ans.next;
+        }
+        while(list1!-null)
+        {
+            ans.next = new ListNode(list1.val);
+            list1 = list1.next;
+        }
+        while(list2!=null)
+        {
+            ans.next = new ListNode(list2.val);
+            list2 = list2.next;
+        }
+        return ptr.next;
+    }
+ }
+
+ class Solution(object):
+    def mergeTwoLists(self, a, b):
+        """
+        :type list1: Optional[ListNode]
+        :type list2: Optional[ListNode]
+        :rtype: Optional[ListNode]
+        """
+        if a and b:
+            if a.val > b.val:
+                a, b = b, a
+            a.next = self.mergeTwoLists(a.next, b)
+        return a or b

@@ -1,0 +1,244 @@
+1. contains duplicate or not 
+answer: 
+class Solution:
+    def containsDuplicate(self, nums: List[int]) -> bool:
+        return len(nums) != len(set(nums))
+
+
+
+2. Valid anagram (rearanged words are same like original)
+answer:
+class Solution:
+    def isAnagram(self, s: str, t: str) -> bool:
+        return sorted(s) == sorted(t)
+
+
+using Counter from collections - it creates dictionary type objects where keys are elements and values are their counts - O(n)
+from collections import Counter 
+class Solution:
+    def isAnagram(self, s:str,t:str) ->bool:
+        return Counter(s) == Counter(t)
+
+
+3. Two sum
+answer:
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        d ={}
+        for i , num in enumerate(nums):
+            c = target - num 
+            if c in d:
+                return [d[c], i]
+            d[num]=i
+        return []
+
+
+4. group anagrams
+answer :
+Class solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        if not strs:
+            return []
+        a = defaultdict(list)
+
+    for word in strs:
+        sorted_word = ''.join(sorted(word))
+        a[sorted_word].append(word)
+    
+    return (a.values())
+
+
+
+5. Top K frequent element 
+Answer:
+from collections import Counter
+def topKFrequent(nums: List[int], k: int) -> List[int]:
+    count = Counter(nums)
+    sorted_val = sorted(count.items(), Key = lambda X:X[1], reverse= True)
+    result = [elem[0] for elem in sorted_val [:k]]
+    return result
+
+
+6. product of array except self 
+answer:
+class Solution:
+    def productExceptSelf(self, nums: List[int]) -> List[int]:
+        n = len(nums)
+        result = [1] * n
+
+        l_p = 1
+        r_p = 1
+        for i in range(n):
+            result[i] = result[i]*l_p
+            l_p = l_p * nums[i]
+        
+        for i in range(n-1, -1, -1):
+            result[i] = result[i] * r_p
+            r_p = r_p * nums[i]
+    
+        return result
+
+
+7. encode and decode 
+Answer:
+class Solution:
+    def encode(self, strs):
+        res = ""
+        for s in strs:
+            res += str(len(s)) + "#" + s
+        return res
+
+    def decode(self, s):
+        res = []
+        i = 0
+        
+        while i < len(s):
+            j = i
+            while s[j] != '#':
+                j += 1
+            length = int(s[i:j])
+            i = j + 1
+            j = i + length
+            res.append(s[i:j])
+            i = j
+            
+        return res
+
+
+8. longest consecutive sequence 
+Answer:
+class Solution:
+    def longestConsecutive(self, nums: List[int]) -> int:
+        s = set(nums)
+        longest =0
+
+        for i in s:
+            if (i-1) not in s:
+                length = 1
+                while (i+length) in s:
+                    length = length+1
+                longest= max(length,longest)
+        return longest
+
+
+9. valid palindrome 
+Answer:
+class Solution:
+    def isPalindrome(self, s: str) -> bool:
+        new = ''
+        for a in s:
+            if a.isalpha() or a.isdigit():
+                new += a.lower()
+        return (new == new[::-1])
+
+
+10. 3Sum 
+Answer:
+class Solution:
+    def threeSum(self, nums: List[int]) -> List[List[int]]:
+        res = []
+        
+        nums.sort()
+
+        for i, a in enumerate(nums):
+            # Skip positive integers
+            if a > 0:
+                break
+
+            if i > 0 and a == nums[i - 1]:
+                continue
+
+            l, r = i + 1, len(nums) - 1
+            
+            while l < r:
+                threeSum = a + nums[l] + nums[r]
+                if threeSum > 0:
+                    r -= 1
+                elif threeSum < 0:
+                    l += 1
+                else:
+                    res.append([a, nums[l], nums[r]])
+                    l += 1
+                    r -= 1
+                    while nums[l] == nums[l - 1] and l < r:
+                        l += 1
+                        
+        return res
+
+
+11. conatiner with most water 
+Answer:
+class Solution:
+    def maxArea(self, height: List[int]) -> int:
+        l, r = 0, len(height) - 1
+        res = 0
+
+        while l < r:
+            res = max(res, min(height[l], height[r]) * (r - l))
+            if height[l] < height[r]:
+                l += 1
+            elif height[r] <= height[l]:
+                r -= 1
+            
+        return res
+
+12. best time to sell and buy stock 
+Answer :
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        lowest = prices[0]
+        res = 0
+
+        for i in prices:
+            if i<lowest:
+                lowest = i
+            res = max(res, i - lowest)
+        return res
+
+
+13. longest repeating character replacment 
+Answer:
+class Solution:
+    def characterReplacement(self, s: str, k: int) -> int:
+        count = {}
+        l = 0
+        maxf = 0
+        for r in range(len(s)):
+            count[s[r]] = 1 + count.get(s[r], 0)
+            maxf = max(maxf, count[s[r]])
+
+            if (r - l + 1) - maxf > k:
+                count[s[l]] -= 1
+                l += 1
+        return (r - l + 1)
+
+
+14. longest substring without  repeating characters 
+Answer:
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        charset = set()
+        l =0
+        res = 0
+        for r in range(len(s)):
+            while s[r] in charset:
+                charset.remove(s[l])
+                l+=1
+            charset.add(s[r])
+            res = max(res, r-l+1)
+        return res
+
+15. Valid parenthesis
+Answer:
+class Solution:
+    def isValid(self, s: str) -> bool:
+        Map = {"}": "{", ")": "(", "]": "["}
+        stack = []
+        for c in s:
+            if c not in Map:
+                stack.append(c)
+                continue
+            if not stack or stack[-1] != Map[c]:  # Corrected this line
+                return False
+            stack.pop()  # Corrected this line
+        return not stack  # Corrected this line
