@@ -1,0 +1,332 @@
+1. Reorder list
+Answer:
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def reorderList(self, head: Optional[ListNode]) -> None:
+        """
+        Do not return anything, modify head in-place instead.
+        """
+        slow, fast = head, head.next
+        while fast and fast.next:
+            slow = slow.next 
+            fast = fast.next.next
+        
+        second = slow.next 
+        prev =  slow.next = None 
+
+        while second:
+            temp = second.next
+            second.next = prev
+            prev = second
+            second = temp 
+
+        first, second = head, prev
+        while second:
+            tmp1, tmp2 = first.next, second.next
+            first.next = second 
+            second.next = tmp1
+            first = tmp1
+            second = tmp2
+
+
+
+
+2. Merge k sorted linked list 
+Answer:
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+from queue import PriorityQueue
+ 
+class Solution:
+    def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        pq = PriorityQueue()
+        for i, lst in enumerate (lists):
+            if lst:
+                pq.put((lst.val, i , lst))
+        dummy = ListNode()
+        curr = dummy 
+
+        while not pq.empty():
+            val, i , node = pq.get()
+            curr.next = ListNode(val)
+            curr= curr.next
+            if node.next:
+                pq.put((node.next.val, i, node.next))
+        
+        return dummy.next
+
+
+
+3. combination sum 
+Answer:
+class Solution:
+    def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
+        def backt(start, target,path, result):
+            if target==0:
+                result.append(path[:])
+                return
+            for i in range(start, len(candidates)):
+                if candidates[i]>target:
+                    continue
+                path.append(candidates[i])
+                backt(i,target-candidates[i],path,result)
+                path.pop()
+
+        
+        result = []
+        candidates.sort()
+        backt(0, target, [], result)
+        return result
+
+
+
+4. Word Search
+Answer:
+class Solution:
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        def bt(i, j, k):
+            if not (0 <= i < len(board)) or not (0 <= j < len(board[0])) or board[i][j] != word[k]:
+                return False
+            if k == len(word) - 1:
+                return True
+            temp, board[i][j] = board[i][j], '/'
+            found = (bt(i + 1, j, k + 1) or bt(i - 1, j, k + 1) or bt(i, j + 1, k + 1) or bt(i, j - 1, k + 1))
+            board[i][j] = temp
+            return found
+        
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                if bt(i, j, 0):
+                    return True
+        return False
+
+
+
+5. search a min element (O(logn))
+Anwer:
+class Solution:
+    def findMin(self, nums: List[int]) -> int:
+        start =0
+        end = len(nums)-1
+        curr = float("inf")
+        while start<end:
+            mid = start+ (end-start)//2
+            curr = min(curr, nums[mid])
+            if nums[mid]>nums[end]:
+                start = mid+1
+            else:
+                end = mid-1
+        return min(curr, nums[start])
+
+
+6. search a target in a rotated sorted array in (O(logn))
+Answer:
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        start = 0
+        end = len(nums)-1
+
+        while start<=end:
+            mid = start +(end-start)//2
+            if nums[mid]==target:
+                return mid
+            
+            #left portion
+            if nums[start] <= nums[mid]:
+                if target>nums[mid] or target<nums[start]:
+                    start = mid+1
+                else:
+                    end = mid -1
+            #right portion
+            else:
+                if target<nums[mid] or target>nums[end]:
+                    end = mid-1
+                else:
+                    start = mid+1
+        return -1
+
+
+7. invert binary tree
+Answer:
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        if root is None:
+            return None
+        
+        root.left,root.right = root.right,root.left 
+
+        self.invertTree(root.left)
+        self.invertTree(root.right)
+
+        return root
+
+
+8. max depth of tree
+Answer:
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def maxDepth(self, root: Optional[TreeNode]) -> int:
+        if root is None:
+            return 0
+        
+        l_d = self.maxDepth(root.left)
+        r_d = self.maxDepth(root.right) 
+
+        return max(l_d,r_d)+1
+
+
+
+9. same tree
+Answer:
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def isSameTree(self, p: Optional[TreeNode], q: Optional[TreeNode]) -> bool:
+        if not p and not q :
+            return True
+        if p and q and p.val == q.val:
+            return self.isSameTree(p.left,q.left) and self.isSameTree(p.right,q.right)
+        else:
+            return False
+
+
+10. subtree of another tree
+Answer:
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def isSubtree(self, root: Optional[TreeNode], subRoot: Optional[TreeNode]) -> bool:
+        def match(node1, node2):
+            if not node1 and not node2:
+                return True
+            if not node1 or not node2:
+                return False
+            return node1.val == node2.val and match(node1.left,node2.left) and match(node1.right,node2.right)
+
+        def traverse(node):
+            if not node:
+                return False
+            return match(node, subRoot) or traverse( node.left) or traverse(node.right)
+        return traverse(root)
+
+
+11. lowest common ancestor 
+Answer:
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        while True:
+            if root.val<p.val and root.val<q.val:
+                root = root.right
+            elif root.val>p.val and root.val>q.val:
+                root = root.left
+            else:
+                return root
+
+
+12. Binary tree level order traversal
+Answer:
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
+        if not root:
+            return []
+        result = []
+        queue = [root]
+
+        while queue:
+            level_val = []
+            level_size = len(queue)
+            for _ in range(level_size):
+                node = queue.pop(0)
+                level_val.append(node.val)
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
+            result.append(level_val)
+        return result
+ 
+
+
+13. valid binary search tree
+Answer:
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def isValidBST(self, root: Optional[TreeNode]) -> bool:
+        def isValid(node,l,r):
+            if not node:
+                return True
+            if not (l< node.val< r):
+                return False
+            return isValid(node.left, l, node.val) and isValid(node.right, node.val, r)
+        return isValid(root, float("-inf"), float("inf"))
+
+
+14. kth smallest in tree
+Answer
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
+        stack = []
+        curr = root 
+        while stack or curr:
+            while curr:
+                stack.append(curr)
+                curr = curr.left
+            curr = stack.pop()
+            k-=1
+            if k==0:
+                return curr.val
+            curr = curr.right
+
+
+
